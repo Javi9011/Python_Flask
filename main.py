@@ -5,37 +5,27 @@ from flask_cors import CORS
 import json
 from waitress import serve
 
+from Controladores.ControladorEstudiante import ControladorEstudiante
+
 app = Flask(__name__)
 cors = CORS(app)
 
+controladorEstudiante = ControladorEstudiante()
 
-@app.route("/grupo25/<string:variable1>", methods=['GET'])
-def estaEsUnaFuncionQueRetornaUnMensaje(variable1):
-    mensajeJson = {}
-    mensajeJson["id_del_grupo"] = 25
-    mensajeJson["idVariable"] = variable1
-    return jsonify(mensajeJson)
 
-@app.route("/grupo25", methods=['POST'])
-def methodPostTest():
-    response = {
-        "key1": "value1",
-        "key2": "value2"
-    }
-    return response
+@app.route("/estudiantes", methods=['POST'])
+def crearEstudiante():
+    requestBody = request.get_json()
+    print("body request",requestBody)
+    result = controladorEstudiante.createEstudiante()
+    if(result):
+        return {"result":"El estudiante se creo correctamente"}
+    else:
+        return {"result":"Error"}
 
-@app.route("/grupo25", methods=['PUT'])
-def methodPutTest():
-    return {
-        "method": "PUT"
-    }
 
-@app.route("/grupo25", methods=['DELETE'])
-def methodDeleteTest():
-    response = {
-        "method": "DELETE"
-    }
-    return response
+
+
 
 def loadFileConfig():
     with open('config.json') as f:

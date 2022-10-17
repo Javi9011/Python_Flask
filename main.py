@@ -22,6 +22,26 @@ def crearEstudiante():
         return {"result":"El estudiante se creo correctamente"}
     else:
         return {"result":"Error"}
+@app.route("/estudiantes", methods=['GET'])
+def getEstudiantes():
+    json=controladorEstudiante.listar()
+    return jsonify(json)
+
+@app.route("/estudiantes</string:id>", methods=['GET'])
+def getEstudiante():
+    json=controladorEstudiante.show()
+    return jsonify(json)
+
+@app.route("/estudiantes</string:id>", methods=['PUT'])
+def modificarEstudiante():
+    data = request.get_json()
+    json=controladorEstudiante.update(id,data)
+    return jsonify(json)
+
+@app.route("/estudiantes</string:id>", methods=['DELETE'])
+def eliminarEstudiante(id):
+    json=controladorEstudiante.delete(id)
+    return jsonify(json)
 
 
 

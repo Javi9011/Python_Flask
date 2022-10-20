@@ -6,11 +6,19 @@ import json
 from waitress import serve
 
 from Controladores.ControladorEstudiante import ControladorEstudiante
+from Controladores.ControladorDepartamento import ControladorDepartamento
+from Controladores.ControladorInscripcion import ControladorInscripcion
+from Controladores.ControladorMateria import ControladorMateria
+
+controladorEstudiante = ControladorEstudiante()
+controladorDepartamento = ControladorDepartamento()
+controladorInscripcion = ControladorInscripcion()
+controladorMateria = ControladorMateria()
 
 app = Flask(__name__)
 cors = CORS(app)
 
-controladorEstudiante = ControladorEstudiante()
+
 
 
 @app.route("/estudiantes", methods=['POST'])
@@ -22,26 +30,41 @@ def crearEstudiante():
         return {"result": "El estudiante se creo correctamente"}
     else:
         return {"result": "Error"}
+
+@app.route("/estudiantes/<string:idObject>", methods=['GET'])
+def buscarEstudiante(idObject):
+        result = controladorEstudiante.buscarEstudiante(idObject)
+        if result is None:
+            return {"resultado": "No se encuentra el Estudiante en base de datos!"}
+        else:
+            return jsonify(result)
+
 @app.route("/estudiantes", methods=['GET'])
-def getEstudiantes():
-    json=controladorEstudiante.listar()
-    return jsonify(json)
+def buscarTodosLosEstudiantes():
+    result = controladorEstudiante.buscarTodosLosEstudiantes()
+    if not result:
+        return {"resultado": "No se encuentran items en la base de datos!"}
+    else:
+        return jsonify(result)
 
-@app.route("/estudiantes/<string:id>", methods=['GET'])
-def getEstudiante():
-    json=controladorEstudiante.show()
-    return jsonify(json)
 
-@app.route("/estudiantes/<string:id>", methods=['PUT'])
-def modificarEstudiante():
-    data = request.get_json()
-    json=controladorEstudiante.update(id,data)
-    return jsonify(json)
+@app.route("/estudiantes", methods=['PUT'])
+def actualizarEstudiante():
+    requestBody = request.get_json()
+    print("Request body: ", requestBody)
+    result = controladorEstudiante.actualizarEstudiante(requestBody)
+    if result:
+        return {"resultado": "Estudiante actualizado!"}
+    else:
+        return {"resultado": "Error al actualizar el Estudiante!"}
 
-@app.route("/estudiantes/<string:id>", methods=['DELETE'])
-def eliminarEstudiante(id):
-    json=controladorEstudiante.delete(id)
-    return jsonify(json)
+@app.route("/estudiantes/<string:idObject>", methods=['DELETE'])
+def eliminarEstudiante(idObject):
+    result = controladorEstudiante.eliminarEstudiante(idObject)
+    if result:
+        return {"resultado": "Estudiante eliminado!"}
+    else:
+        return {"resultado": "Error al eliminar el Estudiante!"}
 
 
 

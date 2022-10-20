@@ -5,36 +5,32 @@ class ControladorEstudiante():
         print("Entra al constructor de la clase controlador")
         self.repositorioEstudiante=RepositorioEstudiante()
     def createEstudiante(self, bodyRequest):
-        print("Creando el estudiante")
+        print("Creando el estudiante...")
         nuevoEstudiante = Estudiante(bodyRequest)
         print("Estudiante a crear en la BD: ", nuevoEstudiante.__dict__)
         self.repositorioEstudiante.save(nuevoEstudiante)
         return True
 
-    def listar(self):
-        print("Listar todos los estudiantes")
-        unEstudiante={
-            "_id":"abc123",
-            "cedula":"1076622148",
-            "nombre":"Nelson",
-            "apellido":"Amaya"
-        }
+    def buscarEstudiante(self, idObject):
+        print("Buscando el estudiante....", idObject)
+        estudiante = Estudiante(self.repositorioEstudiante.findById(idObject))
+        return estudiante.__dict__
 
-    def show(self,id):
-        print("Mostrando un estudiante con id ", id)
-        elEstudiante={
-            "id":id,
-            "cedula":"1076622148",
-            "nombre":"Nelson",
-            "apellido":"Amaya"
-        }
-        return elEstudiante
+    def buscarTodosLosEstudiantes(self):
+        print("Buscando todos los estudiantes en base de datos....")
+        return self.repositorioEstudiante.findAll()
 
-    def update(self, id, elEstudiante,infoEstudiante):
-        print("Actualizando estudiante con id ", id)
-        elEstudiante = Estudiante(infoEstudiante)
-        return elEstudiante.__dict__
+    def actualizarEstudiante(self, estudiante):
+        estudianteActual = Estudiante(self.repositorioEstudiante.findById(estudiante["idObject"]))
+        print("Actualizando el estudiante....", estudianteActual)
+        estudianteActual.nombre = estudiante["nombre"]
+        estudianteActual.apellido = estudiante["apellido"]
+        estudianteActual.cedula = estudiante["cedula"]
+        self.repositorioEstudiante.save(estudianteActual)
+        return True
 
-    def delete(self, id):
-        print("Elimiando estudiante con id ", id)
-        return {"delete_count":1}
+    def eliminarEstudiante(self, idObject):
+        print("Eliminando el estudiante....", idObject)
+        self.repositorioEstudiante.delete(idObject)
+        return True
+

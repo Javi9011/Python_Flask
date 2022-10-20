@@ -1,10 +1,14 @@
+from Repositorios.RepositorioEstudiante import RepositorioEstudiante
 from Modelos.Estudiante import Estudiante
 class ControladorEstudiante():
     def __init__(self):
         print("Entra al constructor de la clase controlador")
-
-    def createEstudiante(self):
-        print("logica del estudiante")
+        self.repositorioEstudiante=RepositorioEstudiante()
+    def createEstudiante(self, bodyRequest):
+        print("Creando el estudiante")
+        nuevoEstudiante = Estudiante(bodyRequest)
+        print("Estudiante a crear en la BD: ", nuevoEstudiante.__dict__)
+        self.repositorioEstudiante.save(nuevoEstudiante)
         return True
 
     def listar(self):

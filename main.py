@@ -49,10 +49,10 @@ def buscarTodosLosEstudiantes():
 
 
 @app.route("/estudiantes", methods=['PUT'])
-def actualizarEstudiante():
+def actualizarElEstudiante():
     requestBody = request.get_json()
     print("Request body: ", requestBody)
-    result = controladorEstudiante.actualizarEstudiante(requestBody)
+    result = controladorEstudiante.actualizarEstudiante(id, requestBody)
     if result:
         return {"resultado": "Estudiante actualizado!"}
     else:
@@ -66,6 +66,69 @@ def eliminarEstudiante(idObject):
     else:
         return {"resultado": "Error al eliminar el Estudiante!"}
 
+@app.route("/departamento", methods=['POST'])
+def crearDepartamento():
+    requestBody=request.get_json()
+    print("body request", requestBody)
+    result = controladorDepartamento.createDepartamento(requestBody)
+    if result:
+        return {"result": "El departamento se creo correctamente"}
+    else:
+        return {"result": "Error"}
+
+@app.route("/departamento", methods=['GET'])
+def buscarTodosDeptos():
+    result=controladorDepartamento.buscarTodosLosDepartamentos()
+    if not result:
+        return {"resultado": "No se encuentran items en la base de datos!"}
+    else:
+        return jsonify(result)
+
+@app.route("/departamento/<string:idObject>", methods=['GET'])
+def buscarById(idObject):
+    result = controladorDepartamento.buscarPorId(idObject)
+    if result is None:
+        return {"resultado": "No se encuentra el departamento en base de datos!"}
+    else:
+        return jsonify(result)
+
+@app.route("/materia", methods=['POST'])
+def crearMateria():
+    requestBody=request.get_json()
+    print("body Request",requestBody)
+    result = controladorMateria.createMateria(requestBody)
+    if result:
+        return {"result": "La materia se creo correctamente"}
+    else:
+        return {"result": "Error"}
+
+@app.route("/materia", methods=['GET'])
+def buscarTodas():
+    result = controladorMateria.buscarTodasLasMaterias()
+    if not result:
+        return {"resultado": "No se encuentran items en la base de datos!"}
+    else:
+        return jsonify(result)
+
+@app.route("/materia/<string:idObject>", methods=['GET'])
+def buscarMateria(idObject):
+    result = controladorMateria.buscarMateriaID(idObject)
+    if result is None:
+        return {"resultado": "No se encuentra el departamento en base de datos!"}
+    else:
+        return jsonify(result)
+
+@app.route("/materia/<string:idMateria>/departamento/<string:idDepartamento>", methods=['PUT'])
+def asignarDeptoAMateria(idMateria,idDepartamento):
+    result=controladorMateria.asignarDepartamento(idMateria,idDepartamento)
+    return jsonify(result)
+
+@app.route("/inscripciones/estudiante/<string:idEstudiante>/materia/<string:idMateria>", methods=['POST'])
+def crearNewInscripcion(idEstudiante,idMateria):
+    requestBody = request.get_json()
+    print("Request body: ", requestBody)
+    result = controladorInscripcion.crearInscripcion(requestBody, idEstudiante, idMateria)
+    return jsonify(result)
 
 
 

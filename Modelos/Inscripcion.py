@@ -1,3 +1,3 @@
 from Modelos.AbstractModelo import AbstractModelo
-class Incripcion(AbstractModelo):
+class Inscripcion(AbstractModelo):
     pass
